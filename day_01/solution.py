@@ -13,10 +13,10 @@ def load_input(path: Path) -> Sequence[int]:
 
 def count_number_of_depth_increases(depths: Sequence[int], window_size: int = 1) -> int:
     """Counts the number of times depth increases in a sequence of sonar measurements."""
-    depth_changes = [
+    depth_changes = (
         sum(depths[i : i + window_size]) - sum(depths[i - 1 : i - 1 + window_size])
         for i in range(1, len(depths) - window_size + 1)
-    ]
+    )
     return sum(d > 0 for d in depth_changes)
 
 
