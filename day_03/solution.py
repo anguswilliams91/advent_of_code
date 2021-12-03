@@ -25,8 +25,7 @@ class Rates(NamedTuple):
         num_zeros = [0] * len(binary_codes[0])
         for code in binary_codes:
             for i, bit in enumerate(code):
-                if bit == "0":
-                    num_zeros[i] += 1
+                num_zeros[i] += bit == "0"
         gamma_rate = "".join("0" if n > num_codes // 2 else "1" for n in num_zeros)
         epsilon_rate = gamma_rate.translate(str.maketrans("01", "10"))
         return (gamma_rate, epsilon_rate)
