@@ -45,10 +45,10 @@ class Ratings(NamedTuple):
     @classmethod
     def from_codes(cls, binary_codes: str) -> Ratings:
         binary_codes = binary_codes.splitlines()
-        oxygen_generator_rating = Ratings.calculate_rating(
+        oxygen_generator_rating = cls.calculate_rating(
             binary_codes, rating_type=RatingType.OXYGEN_GENERATOR
         )
-        co2_scrubber_rating = Ratings.calculate_rating(
+        co2_scrubber_rating = cls.calculate_rating(
             binary_codes, rating_type=RatingType.CO2_SCRUBBER
         )
         return cls(
