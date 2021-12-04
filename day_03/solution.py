@@ -66,14 +66,16 @@ class Ratings(NamedTuple):
         codes_satisfying_bit_criterion = [
             c for c in binary_codes if c[bit_position] == rate[bit_position]
         ]
-        if len(codes_satisfying_bit_criterion) > 1:
-            return Ratings.calculate_rating(
-                codes_satisfying_bit_criterion,
-                rating_type,
-                bit_position=bit_position + 1,
-            )
-        else:
-            return codes_satisfying_bit_criterion[0]
+
+        match codes_satisfying_bit_criterion:
+            case [final_code]:
+                return final_code
+            case _:
+                return Ratings.calculate_rating(
+                    codes_satisfying_bit_criterion,
+                    rating_type,
+                    bit_position=bit_position + 1,
+                )
 
 
 def calculate_power_consumption(binary_codes: str) -> int:
