@@ -94,4 +94,4 @@ if __name__ == "__main__":
         vents_description, use_diagonal=True
     )
     print(f"Part one: {part_one}")
-    print(f"Part one: {part_two}")
+    print(f"Part two: {part_two}")
