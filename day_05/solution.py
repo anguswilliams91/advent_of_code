@@ -72,7 +72,7 @@ def count_number_of_points_with_overlapping_lines(
     """Counts the number of points where multiple lines overlap."""
     vents = tuple(Vent.from_string(v) for v in vents_description.splitlines())
     legal_line_types = (
-        tuple(LineType) if use_diagonal else (LineType.HORIZONTAL, LineType.VERTICAL)
+        LineType if use_diagonal else (LineType.HORIZONTAL, LineType.VERTICAL)
     )
     lines_per_point = Counter(
         reduce(
