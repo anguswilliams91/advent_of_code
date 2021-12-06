@@ -28,7 +28,7 @@ def evolve_school(school: LanternFishSchool, days: int) -> LanternFishSchool:
     return school
 
 
-def find_total_lanterfish(initial_school: str, days: int) -> int:
+def find_total_lanternfish(initial_school: str, days: int) -> int:
     """Finds the total number of lanternfish after a given number of days."""
     initial_school = defaultdict(
         int, Counter(int(n) for n in initial_school.split(","))
@@ -41,6 +41,6 @@ if __name__ == "__main__":
     with open("input.txt", "r") as f:
         initial_school = f.read()
 
-    print(f"Part one: {find_total_lanterfish(initial_school, days=80)}")
-    print(f"Part one: {find_total_lanterfish(initial_school, days=256)}")
+    print(f"Part one: {find_total_lanternfish(initial_school, days=80)}")
+    print(f"Part one: {find_total_lanternfish(initial_school, days=256)}")
 
