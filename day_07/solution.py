@@ -22,12 +22,12 @@ def find_fuel_spend_using_complex_rule(horizontal_positions: str) -> int:
     where xi is position of the ith crab, and p is the optimal location for the crabs
     to align. Differentiating this and rearranging gives:
     
-    p = Sum_i[xi] / N - Sum_i[ Sign[p - xi] ] / 2 N]
+    p = Sum_i[xi] / N - Sum_i[ Sign[p - xi]  / 2N]
 
     The first term on the RHS is the mean of the crab positions, and the second term
     is between -1/2 and 1/2. So p must satisfy
 
-    Mean[xi] - 1 / 2 <= x <= Mean[xi] + 1/2
+    Mean[xi] - 1 / 2 <= p <= Mean[xi] + 1/2
 
     [n.b. I derived most of this but missed the last step to get the tighter bound!]
 
