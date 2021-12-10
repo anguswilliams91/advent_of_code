@@ -17,18 +17,18 @@ class Scores:
 def calculate_scores_of_line(line: str) -> int:
     """Calculates the syntax and completion scores of a line in a navigation subsystem."""
     scores = Scores()
-    brace_queue = []
+    brace_stack = []
     for brace in line:
         if brace in _BRACES:
-            brace_queue.append(brace)
+            brace_stack.append(brace)
         else:
-            if brace_queue and brace == _BRACES[brace_queue[-1]]:
-                brace_queue.pop()
+            if brace_stack and brace == _BRACES[brace_stack[-1]]:
+                brace_stack.pop()
             else:
                 scores.syntax_score = _CORRUPTION_POINTS_BY_BRACE_TYPE[brace]
                 return scores
 
-    for brace in reversed(brace_queue):
+    for brace in reversed(brace_stack):
         scores.completion_score = (
             scores.completion_score * 5 + _COMPLETION_POINTS_BY_BRACE_TYPE[brace]
         )
