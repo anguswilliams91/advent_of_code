@@ -14,7 +14,7 @@ class Scores:
     completion_score: int = 0
 
 
-def calculate_scores_of_line(line: str) -> int:
+def calculate_scores_of_line(line: str) -> Scores:
     """Calculates the syntax and completion scores of a line in a navigation subsystem."""
     scores = Scores()
     brace_stack = []
