@@ -22,18 +22,17 @@ class SnailfishNumber:
         left = self.expression[1]
         if isinstance(left, int):
             left_factor = 3 * left
+            split_pos = 2
         else:
             sub_expression = find_sub_expression(self.expression[1:])
             left_factor = 3 * SnailfishNumber(expression=sub_expression).magnitude
+            split_pos = 1 + len(sub_expression)
 
         right = self.expression[-2]
         if isinstance(right, int):
             right_factor = 2 * right
         else:
-            reversed_sub_expression = self.expression[::-1][1:]
-            sub_expression = find_sub_expression(
-                reversed_sub_expression, reversed=True
-            )[::-1]
+            sub_expression = self.expression[split_pos:-1]
             right_factor = 2 * SnailfishNumber(expression=sub_expression).magnitude
         return left_factor + right_factor
 
@@ -55,18 +54,16 @@ class SnailfishNumber:
 
 
 def find_sub_expression(
-    expression: Sequence[SnailfishElement], reversed: bool = False
+    expression: Sequence[SnailfishElement]
 ) -> Sequence[SnailfishElement]:
     """Finds the outermost closed sub-expression in a subsequence."""
     num_open_braces = 1
     pos = 0
-    open_brace = "]" if reversed else "["
-    close_brace = "[" if reversed else "]"
     while num_open_braces > 0:
         pos += 1
-        if expression[pos] == open_brace:
+        if expression[pos] == "[":
             num_open_braces += 1
-        elif expression[pos] == close_brace:
+        elif expression[pos] == "]":
             num_open_braces -= 1
     return expression[: pos + 1]
 
