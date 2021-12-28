@@ -24,7 +24,7 @@ class Packet:
         elif self.type_id == 0:
             self.value = sum(sub_packet_values)
         elif self.type_id == 1:
-            self.value = reduce(lambda a,b: a *b, sub_packet_values)
+            self.value = reduce(lambda a, b: a * b, sub_packet_values)
         elif self.type_id == 2:
             self.value = min(sub_packet_values)
         elif self.type_id == 3:
