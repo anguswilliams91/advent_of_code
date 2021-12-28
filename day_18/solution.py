@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from copy import copy
 from dataclasses import dataclass
-from itertools import combinations
+from itertools import permutations
 from functools import reduce
 from typing import Sequence, Union
 
@@ -164,13 +164,8 @@ def calculate_magnitude_of_homework_assignment(numbers: Sequence[str]) -> int:
 
 def find_largest_magnitude_of_pair(numbers: Sequence[str]) -> int:
     """Finds the largest possible magnitude from a pair of snailfish numbers in a set."""
-    pairs = []
-    for pair in combinations(numbers, 2):
-        pairs.append(pair)
-        pairs.append(pair[::-1])
-
     largest_magnitude = -float("inf")
-    for pair in pairs:
+    for pair in permutations(numbers, 2):
         magnitude = calculate_magnitude_of_homework_assignment(pair)
         largest_magnitude = (
             magnitude if magnitude > largest_magnitude else largest_magnitude
