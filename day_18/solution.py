@@ -32,8 +32,9 @@ class SnailfishNumber:
         if isinstance(right, int):
             right_factor = 2 * right
         else:
-            sub_expression = self.expression[split_pos:-1]
-            right_factor = 2 * SnailfishNumber(expression=sub_expression).magnitude
+            right_factor = (
+                2 * SnailfishNumber(expression=self.expression[split_pos:-1]).magnitude
+            )
         return left_factor + right_factor
 
     def __add__(self, other: SnailfishNumber) -> SnailfishNumber:
@@ -54,7 +55,7 @@ class SnailfishNumber:
 
 
 def find_sub_expression(
-    expression: Sequence[SnailfishElement]
+    expression: Sequence[SnailfishElement],
 ) -> Sequence[SnailfishElement]:
     """Finds the outermost closed sub-expression in a subsequence."""
     num_open_braces = 1
