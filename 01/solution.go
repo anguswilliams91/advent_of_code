@@ -32,6 +32,7 @@ func solve(puzzleInput string) solution {
 		for i, calories := range topThreeCalories {
 			if totalCalories > calories {
 				indexToUpdate = i
+			} else {
 				break
 			}
 		}
@@ -40,7 +41,7 @@ func solve(puzzleInput string) solution {
 		}
 	}
 	return solution{
-		partOne: topThreeCalories[0],
+		partOne: topThreeCalories[2],
 		partTwo: topThreeCalories[0] + topThreeCalories[1] + topThreeCalories[2],
 	}
 }
