@@ -1,5 +1,4 @@
-// You can edit this code!
-// Click here and start typing.
+// Solution to day 1.
 package main
 
 import (
