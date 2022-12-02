@@ -2,16 +2,11 @@
 package main
 
 import (
+	"aoc"
 	"fmt"
-	"io/ioutil"
 	"strconv"
 	"strings"
 )
-
-type solution struct {
-	partOne int
-	partTwo int
-}
 
 // Gets the total calories of the items held by an elf.
 func getElfCalories(elfItems string) int {
@@ -24,7 +19,7 @@ func getElfCalories(elfItems string) int {
 }
 
 // Finds the sum of highest calory totals held by elves.
-func solve(puzzleInput string) solution {
+func solve(puzzleInput string) aoc.Solution[int, int] {
 	topThreeCalories := []int{0, 0, 0}
 	for _, elfItems := range strings.Split(puzzleInput, "\n\n") {
 		totalCalories := getElfCalories(elfItems)
@@ -40,15 +35,15 @@ func solve(puzzleInput string) solution {
 			topThreeCalories[indexToUpdate] = totalCalories
 		}
 	}
-	return solution{
-		partOne: topThreeCalories[2],
-		partTwo: topThreeCalories[0] + topThreeCalories[1] + topThreeCalories[2],
+	return aoc.Solution[int, int]{
+		PartOne: topThreeCalories[2],
+		PartTwo: topThreeCalories[0] + topThreeCalories[1] + topThreeCalories[2],
 	}
 }
 
 func main() {
-	puzzleInput, _ := ioutil.ReadFile("input.txt")
-	s := solve(string(puzzleInput))
-	fmt.Println("Part one: ", s.partOne)
-	fmt.Println("Part two: ", s.partTwo)
+	puzzleInput := aoc.LoadInput("input.txt")
+	s := solve(puzzleInput)
+	fmt.Println("Part one: ", s.PartOne)
+	fmt.Println("Part two: ", s.PartTwo)
 }
