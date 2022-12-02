@@ -4,6 +4,7 @@ package main
 import (
 	"aoc"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -20,23 +21,14 @@ func getElfCalories(elfItems string) int {
 
 // Finds the sum of highest calory totals held by elves.
 func solve(puzzleInput string) aoc.Solution[int, int] {
-	topThreeCalories := []int{0, 0, 0}
+	var allCalories []int
 	for _, elfItems := range strings.Split(puzzleInput, "\n\n") {
 		totalCalories := getElfCalories(elfItems)
-		indexToUpdate := -1
-		for i, calories := range topThreeCalories {
-			if totalCalories > calories {
-				indexToUpdate = i
-			} else {
-				break
-			}
-		}
-		if indexToUpdate != -1 {
-			topThreeCalories[indexToUpdate] = totalCalories
-		}
+		allCalories = append(allCalories, totalCalories)
 	}
+	sort.Slice(allCalories, func(i, j int) bool {return allCalories[i] > allCalories[j]})
 	return aoc.Solution[int, int]{
-		PartOne: topThreeCalories[2],
+		PartOne: topThreeCalories[0],
 		PartTwo: topThreeCalories[0] + topThreeCalories[1] + topThreeCalories[2],
 	}
 }
