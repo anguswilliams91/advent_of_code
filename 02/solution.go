@@ -79,6 +79,7 @@ func solve(input string) aoc.Solution[int, int] {
 }
 
 func main() {
+	defer aoc.Timer("Day 2")()
 	input := aoc.LoadInput("input.txt")
 	solution := solve(input)
 	fmt.Println("Part 1: ", solution.PartOne)
