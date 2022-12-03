@@ -29,6 +29,7 @@ func getRepeatedItemPriority(items string) int {
 		} else {
 			if seen[r] {
 				priority = runeToPriority(r)
+				break
 			}
 		}
 	}

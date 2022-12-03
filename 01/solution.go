@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+type topThree [3]int
+
 // Gets the total calories of the items held by an elf.
 func getElfCalories(elfItems string) int {
 	totalCalories := 0
@@ -19,32 +21,31 @@ func getElfCalories(elfItems string) int {
 }
 
 // Inserts a calorie count into the top three.
-func insertCalories(calories int, topThree []int) []int {
-	if calories > topThree[0] {
-		if calories <= topThree[1] {
-			topThree[0] = calories
-		} else if calories <= topThree[2] {
-			topThree[0] = topThree[1]
-			topThree[1] = calories
+func (t topThree) update(calories int) {
+	if calories > t[0] {
+		if calories <= t[1] {
+			t[0] = calories
+		} else if calories <= t[2] {
+			t[0] = t[1]
+			t[1] = calories
 		} else {
-			topThree[0] = topThree[1]
-			topThree[1] = topThree[2]
-			topThree[2] = calories
+			t[0] = t[1]
+			t[1] = t[2]
+			t[2] = calories
 		}
 	}
-	return topThree
 }
 
 // Finds the sum of highest calory totals held by elves.
 func solve(puzzleInput string) aoc.Solution[int, int] {
-	topThree := []int{0, 0, 0}
+	t := topThree{0, 0, 0}
 	for _, elfItems := range strings.Split(puzzleInput, "\n\n") {
 		calories := getElfCalories(elfItems)
-		topThree = insertCalories(calories, topThree)
+		t.update(calories)
 	}
 	return aoc.Solution[int, int]{
-		PartOne: topThree[2],
-		PartTwo: topThree[0] + topThree[1] + topThree[2],
+		PartOne: t[2],
+		PartTwo: t[0] + t[1] + t[2],
 	}
 }
 
