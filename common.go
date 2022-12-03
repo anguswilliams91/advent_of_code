@@ -1,6 +1,7 @@
 package aoc
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"time"
@@ -22,8 +23,8 @@ func LoadInput(p string) string {
 
 // Creates a timer to check how long solutions take.
 func Timer(name string) func() {
-    start := time.Now()
-    return func() {
-        fmt.Printf("%s Took %v\n", name, time.Since(start))
-    }
+	start := time.Now()
+	return func() {
+		fmt.Printf("%s Took %v\n", name, time.Since(start))
+	}
 }
