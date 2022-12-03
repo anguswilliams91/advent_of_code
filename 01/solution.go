@@ -3,7 +3,6 @@ package main
 
 import (
 	"aoc"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -21,7 +20,7 @@ func getElfCalories(elfItems string) int {
 }
 
 // Inserts a calorie count into the top three.
-func (t topThree) update(calories int) {
+func (t *topThree) update(calories int) {
 	if calories > t[0] {
 		if calories <= t[1] {
 			t[0] = calories
@@ -50,9 +49,7 @@ func solve(puzzleInput string) aoc.Solution[int, int] {
 }
 
 func main() {
-	defer aoc.Timer("Day 1")()
 	puzzleInput := aoc.LoadInput("input.txt")
-	s := solve(puzzleInput)
-	fmt.Println("Part one: ", s.PartOne)
-	fmt.Println("Part two: ", s.PartTwo)
+	timedSolve := aoc.Timer("Day one", solve)
+	timedSolve(puzzleInput)
 }

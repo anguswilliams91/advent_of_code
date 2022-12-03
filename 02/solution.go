@@ -2,7 +2,6 @@ package main
 
 import (
 	"aoc"
-	"fmt"
 	"strings"
 )
 
@@ -79,9 +78,7 @@ func solve(input string) aoc.Solution[int, int] {
 }
 
 func main() {
-	defer aoc.Timer("Day 2")()
-	input := aoc.LoadInput("input.txt")
-	solution := solve(input)
-	fmt.Println("Part 1: ", solution.PartOne)
-	fmt.Println("Part 2: ", solution.PartTwo)
+	puzzleInput := aoc.LoadInput("input.txt")
+	timedSolve := aoc.Timer("Day two", solve)
+	timedSolve(puzzleInput)
 }
