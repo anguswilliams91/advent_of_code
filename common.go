@@ -24,6 +24,8 @@ func LoadInput(p string) string {
 	return string(input)
 }
 
+// Runs a solution up to 100 times and measures the
+// mean runtime and the standard deivation.
 func Timer[T, U any](name string, solution func(input string) Solution[T, U]) func(input string) {
 	return func(input string) {
 		var ns intSlice
@@ -38,7 +40,7 @@ func Timer[T, U any](name string, solution func(input string) Solution[T, U]) fu
 			}
 			ns = append(ns, t.Nanoseconds())
 			totalDuration += t
-			if totalDuration > 30*time.Second {
+			if totalDuration > 10*time.Second {
 				break
 			}
 		}
