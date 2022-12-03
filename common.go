@@ -25,8 +25,8 @@ func LoadInput(p string) string {
 }
 
 // Runs a solution up to 100 times and measures the
-// mean runtime and the standard deivation.
-func Timer[T, U any](name string, solution func(input string) Solution[T, U]) func(input string) {
+// mean runtime and the standard deviation.
+func Timer[T, U any](name string, solution func(string) Solution[T, U]) func(string) {
 	return func(input string) {
 		var ns intSlice
 		var totalDuration time.Duration
