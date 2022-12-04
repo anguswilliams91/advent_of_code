@@ -42,10 +42,10 @@ func solve(input string) aoc.Solution[int, int] {
 	for _, ps := range strings.Split(input, "\n") {
 		p := parsePair(ps)
 		if oneContainsOther(&p) {
-			partOne += 1
+			partOne++
 		}
 		if rangesOverlap(&p) {
-			partTwo += 1
+			partTwo++
 		}
 	}
 	return aoc.Solution[int, int]{PartOne: partOne, PartTwo: partTwo}
