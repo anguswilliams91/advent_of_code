@@ -24,11 +24,15 @@ func oneContainsOther(p *[2]sectionAssignment) bool {
 }
 
 func parsePair(ps string) [2]sectionAssignment {
-	var s1, s2, f1, f2 int
-	fmt.Sscanf(ps, "%d-%d,%d-%d", &s1, &f1, &s2, &f2)
 	var p [2]sectionAssignment
-	p[0] = sectionAssignment{firstSection: s1, lastSection: f1}
-	p[1] = sectionAssignment{firstSection: s2, lastSection: f2}
+	fmt.Sscanf(
+		ps,
+		"%d-%d,%d-%d",
+		&p[0].firstSection,
+		&p[0].lastSection,
+		&p[1].firstSection,
+		&p[1].lastSection,
+	)
 	return p
 }
 
