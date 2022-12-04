@@ -2,7 +2,7 @@ package main
 
 import (
 	"aoc"
-	"strconv"
+	"fmt"
 	"strings"
 )
 
@@ -13,10 +13,7 @@ type sectionAssignment struct {
 
 func checkOverlap(p *[2]sectionAssignment) bool {
 	a, b := p[0], p[1]
-	aFirstInB := b.firstSection <= a.firstSection && b.lastSection >= a.firstSection
-	aLastInB := b.firstSection <= a.lastSection && b.lastSection >= a.lastSection
-	aContainsB := a.firstSection <= b.firstSection && a.lastSection >= b.lastSection
-	return aFirstInB || aLastInB || aContainsB
+	return a.firstSection <= b.lastSection && b.firstSection <= a.lastSection
 }
 
 func checkFullyContains(p *[2]sectionAssignment) bool {
@@ -27,13 +24,11 @@ func checkFullyContains(p *[2]sectionAssignment) bool {
 }
 
 func parsePair(ps string) [2]sectionAssignment {
+	var s1, s2, f1, f2 int
+	fmt.Sscanf(ps, "%d-%d,%d-%d", &s1, &f1, &s2, &f2)
 	var p [2]sectionAssignment
-	for i, s := range strings.Split(ps, ",") {
-		ns := strings.Split(s, "-")
-		f, _ := strconv.Atoi(ns[0])
-		l, _ := strconv.Atoi(ns[1])
-		p[i] = sectionAssignment{firstSection: f, lastSection: l}
-	}
+	p[0] = sectionAssignment{firstSection: s1, lastSection: f1}
+	p[1] = sectionAssignment{firstSection: s2, lastSection: f2}
 	return p
 }
 
