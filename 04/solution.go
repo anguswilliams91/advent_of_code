@@ -11,12 +11,12 @@ type sectionAssignment struct {
 	lastSection  int
 }
 
-func checkOverlap(p *[2]sectionAssignment) bool {
+func rangesOverlap(p *[2]sectionAssignment) bool {
 	a, b := p[0], p[1]
 	return a.firstSection <= b.lastSection && b.firstSection <= a.lastSection
 }
 
-func checkFullyContains(p *[2]sectionAssignment) bool {
+func oneContainsOther(p *[2]sectionAssignment) bool {
 	a, b := p[0], p[1]
 	aContainsB := a.firstSection <= b.firstSection && a.lastSection >= b.lastSection
 	bContainsA := b.firstSection <= a.firstSection && b.lastSection >= a.lastSection
@@ -37,10 +37,10 @@ func solve(input string) aoc.Solution[int, int] {
 	partTwo := 0
 	for _, ps := range strings.Split(input, "\n") {
 		p := parsePair(ps)
-		if checkFullyContains(&p) {
+		if oneContainsOther(&p) {
 			partOne += 1
 		}
-		if checkOverlap(&p) {
+		if rangesOverlap(&p) {
 			partTwo += 1
 		}
 	}
