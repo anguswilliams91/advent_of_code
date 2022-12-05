@@ -19,9 +19,9 @@ type instruction struct {
 
 func parseStacks(input string) ([]string, stacks) {
 	s := stacks{}
+	var l int
 	r := regexp.MustCompile(stackRegex)
 	ls := strings.Split(input, "\n")
-	l := -1
 	for j, line := range ls {
 		m := r.FindAllSubmatch([]byte(line), -1)
 		if len(m) > 0 {
