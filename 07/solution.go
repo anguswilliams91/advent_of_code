@@ -76,13 +76,11 @@ func (t *directoryTree) sumDirSizesBelowThreshold(threshold int) int {
 // Uses breadth-first search to find the smallest directory that can be deleted.
 func (t *directoryTree) findSmallestDirToDelete(total int, updateSize int) int {
 	required := updateSize - total + t.size["/"]
-	m := t.size["/"]
-	queue := t.children["/"]
-	for len(queue) > 0 {
+	m := total
+	for queue := t.children["/"]; len(queue) > 0; {
 		dir := queue[0]
 		queue = queue[1:]
-		s := t.size[dir]
-		if s >= required {
+		if s := t.size[dir]; s >= required {
 			if s < m {
 				m = s
 			}
