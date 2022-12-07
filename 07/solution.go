@@ -28,8 +28,7 @@ func cd(curDir string, newDir string, t *directoryTree) string {
 }
 
 func (t *directoryTree) propagateFileSize(size int, dir string) {
-	t.size[dir] += size
-	p, ok := t.parent[dir]
+	p, ok := dir, true
 	for ok {
 		t.size[p] += size
 		p, ok = t.parent[p]
