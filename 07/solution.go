@@ -12,8 +12,9 @@ const dirPattern string = "dir (\\/|\\S+)$"
 const filePattern string = "(\\d+) \\S+$"
 
 type directoryTree struct {
-	parent map[string]string
-	size   map[string]int
+	parent   map[string]string
+	children map[string][]string
+	size     map[string]int
 }
 
 func cd(curDir string, newDir string, t *directoryTree) string {
@@ -40,7 +41,11 @@ func browseFilesystem(input string) directoryTree {
 	dirRe := regexp.MustCompile(dirPattern)
 	fileRe := regexp.MustCompile(filePattern)
 	var curDir string
-	t := directoryTree{parent: make(map[string]string), size: make(map[string]int)}
+	t := directoryTree{
+		parent:   make(map[string]string),
+		children: make(map[string][]string),
+		size:     make(map[string]int),
+	}
 	for _, out := range strings.Split(input, "\n") {
 		if m := cdRe.FindAllStringSubmatch(out, -1); len(m) > 0 {
 			dir := m[0][1]
@@ -48,6 +53,7 @@ func browseFilesystem(input string) directoryTree {
 		} else if m := dirRe.FindAllStringSubmatch(out, -1); len(m) > 0 {
 			dir := curDir + "/" + m[0][1]
 			t.parent[dir] = curDir
+			t.children[curDir] = append(t.children[curDir], dir)
 		} else if m := fileRe.FindAllStringSubmatch(out, -1); len(m) > 0 {
 			size, _ := strconv.Atoi(m[0][1])
 			t.propagateFileSize(size, curDir)
@@ -68,12 +74,22 @@ func (t *directoryTree) sumDirSizesBelowThreshold(threshold int) int {
 	return sum
 }
 
+// Uses breadth-first search to find the smallest directory that can be deleted.
 func (t *directoryTree) findSmallestDirToDelete(total int, updateSize int) int {
 	required := updateSize - total + t.size["/"]
 	m := t.size["/"]
-	for _, size := range t.size {
-		if size >= required && size < m {
-			m = size
+	queue := t.children["/"]
+	for len(queue) > 0 {
+		dir := queue[0]
+		queue = queue[1:]
+		s := t.size[dir]
+		if s >= required {
+			if s < m {
+				m = s
+			}
+			if s > required {
+				queue = append(queue, t.children[dir]...)
+			}
 		}
 	}
 	return m
