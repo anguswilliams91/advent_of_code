@@ -72,7 +72,6 @@ func (t treePatch) countVisibleTrees() int {
 func (t treePatch) getScenicScore(r int, c int) int {
 	h := t[r][c]
 	s := len(t[0])
-	// Look up
 	col := t.getCol(c)
 	up := 0
 	for i := r - 1; i >= 0; i-- {
@@ -81,7 +80,6 @@ func (t treePatch) getScenicScore(r int, c int) int {
 			break
 		}
 	}
-	// Look down
 	down := 0
 	for i := r + 1; i < s; i++ {
 		down++
@@ -89,7 +87,6 @@ func (t treePatch) getScenicScore(r int, c int) int {
 			break
 		}
 	}
-	// Look left
 	left := 0
 	for i := c - 1; i >= 0; i-- {
 		left++
@@ -97,7 +94,6 @@ func (t treePatch) getScenicScore(r int, c int) int {
 			break
 		}
 	}
-	// Look right
 	right := 0
 	for i := c + 1; i < s; i++ {
 		right++
