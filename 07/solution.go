@@ -14,10 +14,11 @@ const filePattern string = "(\\d+) \\S+$"
 type directoryTree struct {
 	parent   map[string]string
 	children map[string][]string
+	files    map[string][]int
 	size     map[string]int
 }
 
-func cd(curDir string, newDir string, t *directoryTree) string {
+func (t *directoryTree) cd(curDir string, newDir string) string {
 	if newDir == ".." {
 		return t.parent[curDir]
 	} else if newDir == "/" {
@@ -27,12 +28,22 @@ func cd(curDir string, newDir string, t *directoryTree) string {
 	}
 }
 
-func (t *directoryTree) propagateFileSize(size int, dir string) {
-	p, ok := dir, true
-	for ok {
-		t.size[p] += size
-		p, ok = t.parent[p]
+func (t *directoryTree) populateDirSize(dir string) {
+	size := 0
+	for _, s := range t.files[dir] {
+		size += s
 	}
+	for _, c := range t.children[dir] {
+		var cSize int
+		if s, ok := t.size[c]; !ok {
+			t.populateDirSize(c)
+			cSize = t.size[c]
+		} else {
+			cSize = s
+		}
+		size += cSize
+	}
+	t.size[dir] = size
 }
 
 func browseFilesystem(input string) directoryTree {
@@ -43,23 +54,25 @@ func browseFilesystem(input string) directoryTree {
 	t := directoryTree{
 		parent:   make(map[string]string),
 		children: make(map[string][]string),
+		files:    make(map[string][]int),
 		size:     make(map[string]int),
 	}
 	for _, out := range strings.Split(input, "\n") {
 		if m := cdRe.FindAllStringSubmatch(out, -1); len(m) > 0 {
 			dir := m[0][1]
-			curDir = cd(curDir, dir, &t)
+			curDir = t.cd(curDir, dir)
 		} else if m := dirRe.FindAllStringSubmatch(out, -1); len(m) > 0 {
 			dir := curDir + "/" + m[0][1]
 			t.parent[dir] = curDir
 			t.children[curDir] = append(t.children[curDir], dir)
 		} else if m := fileRe.FindAllStringSubmatch(out, -1); len(m) > 0 {
 			size, _ := strconv.Atoi(m[0][1])
-			t.propagateFileSize(size, curDir)
+			t.files[curDir] = append(t.files[curDir], size)
 		} else {
 			continue
 		}
 	}
+	t.populateDirSize("/")
 	return t
 }
 
