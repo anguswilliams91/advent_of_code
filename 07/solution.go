@@ -11,6 +11,10 @@ const cdPattern string = "\\$ cd (\\/|\\S+|\\.\\.)$"
 const dirPattern string = "dir (\\/|\\S+)$"
 const filePattern string = "(\\d+) \\S+$"
 
+const sizeThreshold int = 100000
+const totalMemory int = 70000000
+const updateSize int = 30000000
+
 type directoryTree struct {
 	parent   map[string]string
 	children map[string][]string
@@ -108,8 +112,8 @@ func (t *directoryTree) findSmallestDirToDelete(total int, updateSize int) int {
 func solve(input string) aoc.Solution[int, int] {
 	t := browseFilesystem(input)
 	return aoc.Solution[int, int]{
-		PartOne: t.sumDirSizesBelowThreshold(100000),
-		PartTwo: t.findSmallestDirToDelete(70000000, 30000000),
+		PartOne: t.sumDirSizesBelowThreshold(sizeThreshold),
+		PartTwo: t.findSmallestDirToDelete(totalMemory, updateSize),
 	}
 }
 
