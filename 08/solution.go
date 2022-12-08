@@ -109,9 +109,8 @@ func (t treePatch) findBestScenicScore() int {
 	best := 0
 	for r := 1; r < s-1; r++ {
 		for c := 1; c < s-1; c++ {
-			curr := t.getScenicScore(r, c)
-			if curr > best {
-				best = curr
+			if ss := t.getScenicScore(r, c); ss > best {
+				best = ss
 			}
 		}
 	}
