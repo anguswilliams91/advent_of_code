@@ -10,7 +10,7 @@ import (
 type rope struct {
 	knots   []image.Point
 	length  int
-	visited map[image.Point]bool
+	visited map[int]map[image.Point]bool
 }
 
 type motion struct {
@@ -20,11 +20,14 @@ type motion struct {
 
 func (r *rope) init(n int) {
 	r.knots = []image.Point{}
+	r.visited = make(map[int]map[image.Point]bool)
 	for i := 0; i < n; i++ {
 		r.knots = append(r.knots, image.Point{0, 0})
+		if i == 1 || i == n-1 {
+			r.visited[i] = make(map[image.Point]bool)
+		}
 	}
 	r.length = n
-	r.visited = make(map[image.Point]bool)
 }
 
 func abs(x int) int {
@@ -70,9 +73,12 @@ func (r *rope) move(m motion) {
 	for i := 1; i <= m.distance; i++ {
 		r.knots[0] = r.knots[0].Add(d)
 		for j := 1; j < r.length; j++ {
-			r.knots[j] = pull(r.knots[j-1], r.knots[j])
+			p := pull(r.knots[j-1], r.knots[j])
+			r.knots[j] = p
+			if j == 1 || j == r.length-1 {
+				r.visited[j][p] = true
+			}
 		}
-		r.visited[r.knots[r.length-1]] = true
 	}
 }
 
@@ -93,17 +99,14 @@ func parseInput(input string) []motion {
 
 func solve(input string) aoc.Solution[int, int] {
 	ms := parseInput(input)
-	r2 := rope{}
-	r10 := rope{}
-	r2.init(2)
-	r10.init(10)
+	r := rope{}
+	r.init(10)
 	for _, m := range ms {
-		r2.move(m)
-		r10.move(m)
+		r.move(m)
 	}
 	return aoc.Solution[int, int]{
-		PartOne: len(r2.visited),
-		PartTwo: len(r10.visited),
+		PartOne: len(r.visited[1]),
+		PartTwo: len(r.visited[r.length-1]),
 	}
 }
 
