@@ -15,7 +15,7 @@ type Solution[T, U any] struct {
 
 type intSlice []int64
 
-// Loads a puzzle's input from a path p into a string.
+// LoadInput loads a puzzle's input from a path p into a string.
 func LoadInput(p string) string {
 	input, err := ioutil.ReadFile("input.txt")
 	if err != nil {
@@ -24,8 +24,8 @@ func LoadInput(p string) string {
 	return string(input)
 }
 
-// Runs a solution up to 100 times and measures the
-// mean runtime and the standard deviation.
+// Timer returns a function that runs a solution up to 100 times
+// and measures the mean runtime and the standard deviation.
 func Timer[T, U any](name string, solution func(string) Solution[T, U]) func(string) {
 	return func(input string) {
 		var ns intSlice
