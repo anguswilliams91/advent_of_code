@@ -34,16 +34,18 @@ func abs(x int) int {
 	return x
 }
 
-func safeDiv(x int, y int) int {
-	if x == 0 && y == 0 {
-		return 0
+func sign(x int) int {
+	if x > 0 {
+		return 1
+	} else if x < 0 {
+		return -1
 	} else {
-		return x / y
+		return 0
 	}
 }
 
 func unit(p image.Point) image.Point {
-	return image.Point{safeDiv(p.X, abs(p.X)), safeDiv(p.Y, abs(p.Y))}
+	return image.Point{sign(p.X), sign(p.Y)}
 }
 
 func pull(p image.Point, q image.Point) image.Point {
