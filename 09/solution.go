@@ -18,13 +18,6 @@ type motion struct {
 	distance  int
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 func (r *rope) init(n int) {
 	r.knots = []image.Point{}
 	for i := 0; i < n; i++ {
@@ -32,6 +25,13 @@ func (r *rope) init(n int) {
 	}
 	r.length = n
 	r.visited = make(map[image.Point]bool)
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
 
 func safeDiv(x int, y int) int {
