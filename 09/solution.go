@@ -69,10 +69,8 @@ func (r *rope) move(m motion) {
 		r.knots[0] = r.knots[0].Add(d)
 		for j := 1; j < r.length; j++ {
 			r.knots[j] = pull(r.knots[j-1], r.knots[j])
-			if j == r.length-1 {
-				r.visited[r.knots[j]] = true
-			}
 		}
+		r.visited[r.knots[r.length-1]] = true
 	}
 }
 
