@@ -43,13 +43,13 @@ func parseInput(input string) *heightMap {
 		for c, v := range []rune(s) {
 			p := image.Point{r, c}
 			hm.height[p] = v
-			if h := string(v); h == "S" {
+			if v == 'S' {
 				hm.height[p] = 'a'
 				hm.start = p
-			} else if h == "E" {
+			} else if v == 'E' {
 				hm.height[p] = 'z'
 				hm.end = p
-			} else if h == "a" {
+			} else if v == 'a' {
 				hm.altStarts = append(hm.altStarts, p)
 			}
 		}
@@ -72,11 +72,10 @@ func findShortestRoute(hm *heightMap, fromAnywhere bool) int {
 		if p.coords.Eq(hm.end) {
 			return p.distance
 		}
-		h0 := hm.height[p.coords]
 		for _, delta := range []image.Point{{-1, 0}, {1, 0}, {0, -1}, {0, 1}} {
 			n := p.coords.Add(delta)
 			if h, ok := hm.height[n]; ok {
-				if h-h0 <= 1 && !visited[n] {
+				if h-hm.height[p.coords] <= 1 && !visited[n] {
 					visited[n] = true
 					q.push(location{coords: n, distance: p.distance + 1})
 				}
