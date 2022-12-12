@@ -49,8 +49,6 @@ func parseInput(input string) *heightMap {
 			} else if v == 'E' {
 				hm.height[p] = 'z'
 				hm.end = p
-			} else if v == 'a' {
-				hm.altStarts = append(hm.altStarts, p)
 			}
 		}
 	}
@@ -58,24 +56,30 @@ func parseInput(input string) *heightMap {
 }
 
 func findShortestRoute(hm *heightMap, fromAnywhere bool) int {
-	visited := make(map[image.Point]bool)
-	q := queue{location{coords: hm.start, distance: 0}}
-	visited[hm.start] = true
+	var cond func(rune, rune) bool
+	var finished func(location) bool
+	var start image.Point
 	if fromAnywhere {
-		for _, l := range hm.altStarts {
-			q.push(location{coords: l, distance: 0})
-			visited[l] = true
-		}
+		cond = func(h, h0 rune) bool { return h0-h <= 1 }
+		finished = func(l location) bool { return hm.height[l.coords] == 'a' }
+		start = hm.end
+	} else {
+		cond = func(h, h0 rune) bool { return h-h0 <= 1 }
+		finished = func(l location) bool { return l.coords.Eq(hm.end) }
+		start = hm.start
 	}
+	visited := make(map[image.Point]bool)
+	q := queue{location{coords: start, distance: 0}}
+	visited[start] = true
 	for len(q) > 0 {
 		p := q.pop()
-		if p.coords.Eq(hm.end) {
+		if finished(p) {
 			return p.distance
 		}
 		for _, delta := range []image.Point{{-1, 0}, {1, 0}, {0, -1}, {0, 1}} {
 			n := p.coords.Add(delta)
 			if h, ok := hm.height[n]; ok {
-				if h-hm.height[p.coords] <= 1 && !visited[n] {
+				if cond(h, hm.height[p.coords]) && !visited[n] {
 					visited[n] = true
 					q.push(location{coords: n, distance: p.distance + 1})
 				}
