@@ -7,105 +7,47 @@ import (
 	"strings"
 )
 
-const (
-	no        = 0
-	ambiguous = 1
-	yes       = 2
-)
-
-type packet []interface{}
-type pair [2]packet
+type pair [2]any
 
 func parseInput(input string) ([]*pair, []string) {
 	pairs := []*pair{}
 	all := []string{"[[2]]", "[[6]]"}
 	for _, ls := range strings.Split(input, "\n\n") {
-		ps := pair{}
-		for i, l := range strings.Split(ls, "\n") {
-			p := packet{}
-			json.Unmarshal([]byte(l), &p)
-			ps[i] = p
-			all = append(all, l)
-		}
+		s := strings.Split(ls, "\n")
+		var p, q any
+		json.Unmarshal([]byte(s[0]), &p)
+		json.Unmarshal([]byte(s[1]), &q)
+		ps := pair{p, q}
+		all = append(all, s...)
 		pairs = append(pairs, &ps)
 	}
 	return pairs, all
 }
 
-func (p *packet) pop() (any, bool) {
-	head := (*p)[0]
-	(*p)[0] = nil
-	*p = (*p)[1:]
-	_, ok := head.(float64)
-	if ok {
-		return head, true
-	} else {
-		return head, false
+func compare(p any, q any) int {
+	ps, pok := p.([]any)
+	qs, qok := q.([]any)
+	switch {
+	case !pok && !qok:
+		return int(p.(float64) - q.(float64))
+	case !qok:
+		qs = []any{q}
+	case !pok:
+		ps = []any{p}
 	}
+	for i := 0; i < len(ps) && i < len(qs); i++ {
+		if c := compare(ps[i], qs[i]); c != 0 {
+			return c
+		}
+	}
+	return len(ps) - len(qs)
 }
 
-func wrap(x any) []interface{} {
-	return []interface{}{x}
-}
-
-func (ps *pair) compare() int {
-	isEmpty0 := len(ps[0]) == 0
-	isEmpty1 := len(ps[1]) == 0
-	if isEmpty0 && !isEmpty1 {
-		return yes
-	} else if !isEmpty0 && isEmpty1 {
-		return no
-	} else if isEmpty0 && isEmpty1 {
-		return ambiguous
-	}
-	v0, isNum0 := ps[0].pop()
-	v1, isNum1 := ps[1].pop()
-	if isNum0 && isNum1 {
-		if v0.(float64) < v1.(float64) {
-			return yes
-		} else if v0.(float64) > v1.(float64) {
-			return no
-		} else {
-			return ps.compare()
-		}
-	} else if isNum0 && !isNum1 {
-		ps[0] = append(wrap(wrap(v0)), ps[0]...)
-		ps[1] = append(wrap(v1), ps[1]...)
-		return ps.compare()
-	} else if !isNum0 && isNum1 {
-		ps[0] = append(wrap(v0), ps[0]...)
-		ps[1] = append(wrap(wrap(v1)), ps[1]...)
-		return ps.compare()
-	} else {
-		v0 := v0.([]interface{})
-		v1 := v1.([]interface{})
-		n1 := len(v1)
-		for i, subP0 := range v0 {
-			if i == n1 {
-				return no
-			}
-			qs := pair{packet{subP0}, packet{v1[i]}}
-			out := qs.compare()
-			if out == yes || out == no {
-				return out
-			}
-		}
-		if len(v0) < len(v1) {
-			return yes
-		}
-		return ps.compare()
-
-	}
-}
-
-func compare(s string, t string) bool {
-	p := packet{}
-	q := packet{}
+func stringCompare(s string, t string) bool {
+	var p, q any
 	json.Unmarshal([]byte(s), &p)
 	json.Unmarshal([]byte(t), &q)
-	ps := pair{p, q}
-	out := ps.compare()
-	if out == yes || out == ambiguous {
+	if c := compare(p, q); c < 0 {
 		return true
 	} else {
 		return false
@@ -116,13 +58,12 @@ func solve(input string) aoc.Solution[int, int] {
 	pairs, all := parseInput(input)
 	partOne := 0
 	for i, pair := range pairs {
-		state := pair.compare()
-		if state == yes {
+		if c := compare(pair[0], pair[1]); c <= 0 {
 			partOne += i + 1
 		}
 	}
 	sort.Slice(all, func(i, j int) bool {
-		return compare(all[i], all[j])
+		return stringCompare(all[i], all[j])
 	})
 	key := 1
 	for i, s := range all {
