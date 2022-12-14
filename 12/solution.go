@@ -7,10 +7,9 @@ import (
 )
 
 type heightMap struct {
-	height    map[image.Point]rune
-	start     image.Point
-	end       image.Point
-	altStarts []image.Point
+	height map[image.Point]rune
+	start  image.Point
+	end    image.Point
 }
 
 type location struct {
@@ -33,7 +32,6 @@ func (q *queue) push(p location) {
 func newHeightMap() *heightMap {
 	r := heightMap{}
 	r.height = make(map[image.Point]rune)
-	r.altStarts = []image.Point{}
 	return &r
 }
 
