@@ -109,6 +109,6 @@ func solve(input string) aoc.Solution[int, int] {
 
 func main() {
 	puzzleInput := aoc.LoadInput("input.txt")
-	timedSolve := aoc.Timer("Day twelve", solve)
+	timedSolve := aoc.Timer("Day fourteen", solve)
 	timedSolve(puzzleInput)
 }
