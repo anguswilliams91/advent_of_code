@@ -17,18 +17,6 @@ type location struct {
 	distance int
 }
 
-type queue []location
-
-func (q *queue) pop() location {
-	head := (*q)[0]
-	*q = (*q)[1:]
-	return head
-}
-
-func (q *queue) push(p location) {
-	*q = append(*q, p)
-}
-
 func newHeightMap() *heightMap {
 	r := heightMap{}
 	r.height = make(map[image.Point]rune)
@@ -67,10 +55,10 @@ func findShortestRoute(hm *heightMap, fromAnywhere bool) int {
 		start = hm.start
 	}
 	visited := make(map[image.Point]bool)
-	q := queue{location{coords: start, distance: 0}}
+	q := aoc.Queue[location]{location{coords: start, distance: 0}}
 	visited[start] = true
 	for len(q) > 0 {
-		p := q.pop()
+		p := q.Pop()
 		if finished(p) {
 			return p.distance
 		}
@@ -79,7 +67,7 @@ func findShortestRoute(hm *heightMap, fromAnywhere bool) int {
 			if h, ok := hm.height[n]; ok {
 				if cond(h, hm.height[p.coords]) && !visited[n] {
 					visited[n] = true
-					q.push(location{coords: n, distance: p.distance + 1})
+					q.Push(location{coords: n, distance: p.distance + 1})
 				}
 			}
 		}

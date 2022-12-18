@@ -30,29 +30,12 @@ func (r *rope) init(n int) {
 	r.length = n
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
-func sign(x int) int {
-	if x > 0 {
-		return 1
-	} else if x < 0 {
-		return -1
-	} else {
-		return 0
-	}
-}
-
 func unit(p image.Point) image.Point {
-	return image.Point{sign(p.X), sign(p.Y)}
+	return image.Point{aoc.Sign(p.X), aoc.Sign(p.Y)}
 }
 
 func pull(p image.Point, q image.Point) image.Point {
-	if d := p.Sub(q); abs(d.X) > 1 || abs(d.Y) > 1 {
+	if d := p.Sub(q); aoc.Abs(d.X) > 1 || aoc.Abs(d.Y) > 1 {
 		return q.Add(unit(d))
 	}
 	return q

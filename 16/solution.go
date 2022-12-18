@@ -45,20 +45,6 @@ func (gp *graph) simplify() {
 	}
 }
 
-func min(i, j int) int {
-	if i < j {
-		return i
-	}
-	return j
-}
-
-func max(i, j int) int {
-	if i > j {
-		return i
-	}
-	return j
-}
-
 // getDistances uses the Floyd-Warshall algorithm to get the minimum
 // distance from each valve to every other valve.
 // https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
@@ -85,7 +71,10 @@ func getDistances(g graph) map[string]map[string]int {
 	for _, i := range names {
 		for _, j := range names {
 			for _, k := range names {
-				distances[i][j] = min(distances[i][j], distances[i][k]+distances[k][j])
+				distances[i][j] = aoc.Min(
+					distances[i][j],
+					distances[i][k]+distances[k][j],
+				)
 			}
 		}
 	}
@@ -131,18 +120,6 @@ type state struct {
 	pressureReleased int
 }
 
-type queue[T any] []*T
-
-func (q *queue[T]) pop() T {
-	head := (*q)[0]
-	*q = (*q)[1:]
-	return *head
-}
-
-func (q *queue[T]) push(v T) {
-	*q = append(*q, &v)
-}
-
 func copy[T comparable, U any](m map[T]U) map[T]U {
 	new := make(map[T]U)
 	for k, v := range m {
@@ -160,13 +137,13 @@ func getPressures(g graph, maxTime int) map[string]int {
 		pressureReleased: 0,
 	}
 	pressures := make(map[string]int)
-	q := queue[state]{&s}
+	q := aoc.Queue[*state]{&s}
 	for len(q) > 0 {
-		c := q.pop()
+		c := q.Pop()
 		// Can't use a map as a key to another map in
 		// Golang, so convert to string using JSON.
 		k, _ := json.Marshal(c.opened)
-		pressures[string(k)] = max(
+		pressures[string(k)] = aoc.Max(
 			pressures[string(k)],
 			c.pressureReleased,
 		)
@@ -183,7 +160,7 @@ func getPressures(g graph, maxTime int) map[string]int {
 				opened:           opened,
 				pressureReleased: c.pressureReleased + t*v.flowRate,
 			}
-			q.push(next)
+			q.Push(&next)
 		}
 	}
 	return pressures
@@ -200,18 +177,6 @@ func partOne(g graph) int {
 	return maxPressure
 }
 
-func memoized[T comparable, U any](expensive func(x T) U) func(x T) U {
-	cache := make(map[T]U)
-	return func(x T) U {
-		if r, ok := cache[x]; ok {
-			return r
-		}
-		y := expensive(x)
-		cache[x] = y
-		return y
-	}
-}
-
 func noOverlapExcept(p map[string]bool, q map[string]bool, exception string) bool {
 	for k := range p {
 		if _, ok := q[k]; ok && k != exception {
@@ -224,7 +189,7 @@ func noOverlapExcept(p map[string]bool, q map[string]bool, exception string) boo
 func partTwo(g graph) int {
 	pressures := getPressures(g, partTwoTime)
 	maxPressure := 0
-	getVisited := memoized(
+	getVisited := aoc.Memoized(
 		func(s string) map[string]bool {
 			v := make(map[string]bool)
 			json.Unmarshal([]byte(s), &v)

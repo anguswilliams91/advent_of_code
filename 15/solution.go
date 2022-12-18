@@ -31,34 +31,13 @@ func parseInput(input string) map[image.Point]image.Point {
 	return sensors
 }
 
-func abs(a int) int {
-	if a < 0 {
-		return -a
-	}
-	return a
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
 func L1(p, q image.Point) int {
-	return abs(p.X-q.X) + abs(p.Y-q.Y)
+	return aoc.Abs(p.X-q.X) + aoc.Abs(p.Y-q.Y)
 }
 
 func ruleOutLocations(sensor, beacon image.Point, y int) (interval, bool) {
 	d := L1(sensor, beacon)
-	if dy := abs(sensor.Y - y); dy <= d {
+	if dy := aoc.Abs(sensor.Y - y); dy <= d {
 		return interval{dy - d + sensor.X, d - dy + sensor.X}, true
 	}
 	return interval{}, false
@@ -71,7 +50,7 @@ func merge(rs []interval) []interval {
 		if len(merged) == 0 || merged[len(merged)-1].max < r.min {
 			merged = append(merged, r)
 		} else {
-			merged[len(merged)-1].max = max(merged[len(merged)-1].max, r.max)
+			merged[len(merged)-1].max = aoc.Max(merged[len(merged)-1].max, r.max)
 		}
 	}
 	return merged
