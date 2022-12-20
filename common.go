@@ -120,6 +120,11 @@ func Sign[T number](x T) T {
 	}
 }
 
+// Divmod returns the result of integer division plus the modulus.
+func Divmod(i, j int) (int, int) {
+	return i / j, i % j
+}
+
 type Queue[T any] []T
 
 // Pop removes the first item from a Queue
