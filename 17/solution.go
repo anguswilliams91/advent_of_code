@@ -155,9 +155,7 @@ func getHeightAfter(numRocks int, jets []image.Point) int {
 			falling = r.fall(t)
 		}
 		for _, p := range r {
-			if p.Y > t.maxHeight {
-				t.maxHeight = p.Y
-			}
+			t.maxHeight = aoc.Max(t.maxHeight, p.Y)
 			t.blocked[p] = true
 		}
 		currentShape = (currentShape + 1) % 5
