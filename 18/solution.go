@@ -75,46 +75,34 @@ func (bb *boundingBox) contains(p point) bool {
 	return xOk && yOk && zOk
 }
 
-func (dp *droplet) fillAirPockets() droplet {
+func (dp *droplet) getOutsideSurfaceArea() int {
 	d := *dp
 	bb := dp.getBoundingBox()
-	// Uses BFS to flood-fill the bounding box of the
-	// droplet.
+	area := 0
 	q := aoc.Queue[point]{}
 	q.Push(point{bb.maxX, bb.maxY, bb.maxZ})
 	seen := map[point]struct{}{}
 	for len(q) > 0 {
 		p := q.Pop()
 		for _, n := range p.getNeighbours() {
-			_, visited := seen[n]
-			if _, ok := d[n]; bb.contains(n) && !ok && !visited {
+			_, onDroplet := d[n]
+			if _, visited := seen[n]; bb.contains(n) && !onDroplet && !visited {
 				seen[n] = struct{}{}
 				q.Push(n)
 			}
-		}
-	}
-	// Makes a new droplet where the cubes not touched during
-	// BFS are filled with obsidian instead of air.
-	filledDroplet := droplet{}
-	for x := bb.minX; x <= bb.maxX; x++ {
-		for y := bb.minY; y <= bb.maxY; y++ {
-			for z := bb.minZ; z <= bb.maxZ; z++ {
-				p := point{x, y, z}
-				if _, ok := seen[p]; !ok {
-					filledDroplet[p] = struct{}{}
-				}
+			if onDroplet {
+				area++
 			}
 		}
 	}
-	return filledDroplet
+	return area
 }
 
 func solve(input string) aoc.Solution[int, int] {
 	d := parseInput(input)
-	f := d.fillAirPockets()
 	return aoc.Solution[int, int]{
 		PartOne: d.getSurfaceArea(),
-		PartTwo: f.getSurfaceArea(),
+		PartTwo: d.getOutsideSurfaceArea(),
 	}
 }
 
