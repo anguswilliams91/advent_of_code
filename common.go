@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math"
+	"sort"
 	"time"
 )
 
@@ -85,20 +86,19 @@ type number interface {
 	int | int8 | int16 | int32 | int64 | float32 | float64
 }
 
-// Min finds the minimum of two numbers.
-func Min[T number](i, j T) T {
-	if i < j {
-		return i
-	}
-	return j
+// Min finds the minimum of some numbers.
+func Min[T number](i T, j ...T) T {
+	all := append(j, i)
+	sort.Slice(all, func(p, q int) bool { return all[p] < all[q] })
+	return all[0]
+
 }
 
-// Max finds the maximum of two numbers.
-func Max[T number](i, j T) T {
-	if i > j {
-		return i
-	}
-	return j
+// Max finds the maximum of some numbers.
+func Max[T number](i T, j ...T) T {
+	all := append(j, i)
+	sort.Slice(all, func(p, q int) bool { return all[p] > all[q] })
+	return all[0]
 }
 
 // Abs returns the absolute value of a number.
@@ -135,10 +135,12 @@ func (q *Queue[T]) Pop() T {
 	return head
 }
 
-// Push sends a new value to the back of
+// Push sends new value(s) to the back of
 // the Queue.
-func (q *Queue[T]) Push(v T) {
-	*q = append(*q, v)
+func (q *Queue[T]) Push(v ...T) {
+	for _, vi := range v {
+		*q = append(*q, vi)
+	}
 }
 
 // Memoized returns a memoized version of `expensive`.
@@ -152,4 +154,20 @@ func Memoized[T comparable, U any](expensive func(x T) U) func(x T) U {
 		cache[x] = y
 		return y
 	}
+}
+
+type Stack[T any] []T
+
+// Pop removes the item at the top of the stack
+// and returns it.
+func (s *Stack[T]) Pop() T {
+	head := (*s)[0]
+	*s = (*s)[1:]
+	return head
+}
+
+// Push adds new value(s) to the top of the
+// stack.
+func (s *Stack[T]) Push(v ...T) {
+	*s = append(v, *s...)
 }
