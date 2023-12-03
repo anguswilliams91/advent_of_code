@@ -24,10 +24,9 @@ def get_number_and_symbol_positions(
             numbers[(i, start, end)] = int(number_match.group(0))
             # Between the end of the previous number and the start of this one, check
             # for symbols.
-            if last_end != start:
-                for k in range(last_end + 1, start):
-                    if (s := line[k]) != ".":
-                        symbols[(i, k)] = s
+            for k in range(last_end + 1, start):
+                if (s := line[k]) != ".":
+                    symbols[(i, k)] = s
             last_end = end
         # The final number may end before the end of the line, so check the rest of the
         # line for symbols.
