@@ -12,19 +12,19 @@ def load_input(path: str) -> tuple[Sequence[int], Sequence[int]]:
             rs.append(int(r))
     return (ls, rs)
 
-def part_one(ls, rs) -> int:
+def part_one(ls: Sequence[int], rs: Sequence[int]) -> int:
     ls, rs = sorted(ls), sorted(rs)
     ds = [abs(l-r) for l,r in zip(ls, rs)]
     return sum(ds)
 
-def part_two(ls, rs) -> int:
+def part_two(ls: Sequence[int], rs: Sequence[int]) -> int:
     rcounts = Counter(rs)
     similarity = 0
     for l in ls:
         similarity += l * rcounts[l]
     return similarity
 
-def solve(ls, rs) -> tuple[int, int]:
+def solve(ls: Sequence[int], rs: Sequence[int]) -> tuple[int, int]:
     return part_one(ls, rs), part_two(ls, rs)
 
 def main():
